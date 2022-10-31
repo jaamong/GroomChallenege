@@ -14,7 +14,7 @@ public class no1 {
         int totalMoney = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
 
-        Queue<Integer> rq = new LinkedList<>();
+        Queue<Integer> q = new LinkedList<>();
 
         for (int i = 0; i < m; i++) {
             st = new StringTokenizer(br.readLine());
@@ -23,29 +23,18 @@ public class no1 {
 
             if ("deposit".equals(kind)) {
                 totalMoney += money;
+                while (!q.isEmpty() && q.peek() <= totalMoney)
+                    totalMoney -= q.poll();
+
             } else if ("pay".equals(kind)) {
                 if (totalMoney >= money) totalMoney -= money;
+
             } else if ("reservation".equals(kind)) {
-                if (rq.size() >= 1) {//대기 요금이 있다면
-                    rq.add(money); //감소하지 않고 큐에 넣는다
-                } else {
-                    if (totalMoney >= money) totalMoney -= money;
-                    else rq.add(money);
-                }
+                if (q.isEmpty() && totalMoney >= money)
+                    totalMoney -= money;
+                else
+                    q.add(money);
             }
-        }
-
-        if (rq.isEmpty() || totalMoney == 0) {
-            System.out.println(totalMoney);
-            return;
-        }
-
-        while (!rq.isEmpty()) {
-            int money = rq.peek();
-            if (totalMoney >= money) {
-                totalMoney -= money;
-                rq.poll();
-            } else break;
         }
         System.out.println(totalMoney);
     }
